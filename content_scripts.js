@@ -7,6 +7,7 @@
 */
 
 $(function () {
+  console.log("Download audio script is running...");
   mainJob(document.URL);
 });
 
@@ -578,6 +579,19 @@ function mainJob(url) {
     });
   }
 
+  // http://www.vocabolaudio.com
+  else if (url.match(/http[s]?:\/\/*www.vocabolaudio.com\/*/)) {
+  	console.log(`page url: ` + url);
+    if (!$(".word").length) {
+      return false;
+    }
+    $(".word").each(function () {
+      const audioUrl = `http://www.vocabolaudio.com/audio-it/` + $(this).text() + `.mp3`;
+      console.log(`audio url: ` + audioUrl);
+      insertDownloadLink(audioUrl, $(this).parent().next().next());
+    });
+  }
+
   // TODO: too lazy to tidy up duplicated codes
   else {
     // console.log("no match");
@@ -588,7 +602,7 @@ function mainJob(url) {
 function insertDownloadLink(audioUrl, insertAfterDOM, isInsertLogo = true, text = "") {
   // console.log("audioUrl = " + audioUrl);
   const imageUrl = chrome.extension.getURL('icons/icon_24.png');
-  let HTML = "<span style='font-size:14px'><a target='_blank' href='" + audioUrl + "'>" + chrome.i18n.getMessage("textDownloadAudio") + text
+  let HTML = "<span style='font-size:14px'><a target='_blank' href='" + audioUrl + "' download>" + chrome.i18n.getMessage("textDownloadAudio") + text
   if (isInsertLogo) {
     HTML += "<img src='" + imageUrl + "' alt='Download Audio' height='16' width='16'>"
   }
